@@ -58,6 +58,14 @@
         height: 200px;
         object-fit: cover;
       }
+      .product-card img {
+      width: 200px;       /* fixed width */
+      height: 200px;      /* fixed height */
+      object-fit: cover;  /* keeps ratio, crops extra */
+      display: block;
+      margin: 0 auto;     /* centers image inside the card */
+      border-radius: 0.5rem; /* optional rounded corners */
+    }
     </style>
   </head>
   <body class="bg-gray-100">
@@ -222,5 +230,6 @@
     <script type="module" src="script.js"></script>
   </body>
 </html>
+
 
 
