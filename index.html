@@ -7,134 +7,219 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      #messageBox {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+        min-width: 250px;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .category-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        transition: all 0.2s;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .category-btn:hover {
+        background-color: #047857;
+        color: #fff;
+      }
+      .category-btn.active {
+        background-color: #047857;
+        color: #fff;
+        font-weight: bold;
+      }
+      .product-card {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        transition: box-shadow 0.2s, transform 0.2s;
+        cursor: pointer;
+      }
+      .product-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-0.25rem);
+      }
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+    </style>
   </head>
   <body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-yellow-700 text-black shadow-md">
-      <div class="container mx-auto flex justify-between items-center px-4 py-3">
-        <div class="flex items-center space-x-2">
-          <img src="logo2.jpg" alt="TribalVerse Logo" class="h-10 w-10 rounded-full" />
-          <h1 class="text-2xl font-bold text-white">TribalVerse</h1>
+    <div id="messageBox" class="transition-transform duration-300 scale-0"></div>
+
+    <!-- 💻 Main App Container -->
+    <div id="mainAppContainer">
+      <!-- 🔝 Header -->
+      <header class="bg-yellow-700 text-black shadow-md">
+        <div class="container mx-auto px-4 py-3">
+          <!-- Top section with logo, search, and buttons -->
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center space-x-2">
+              <img src="assests/logo2.jpg" alt="TribalVerse Logo" class="h-10 w-10 rounded-full" />
+              <h1 class="text-2xl font-bold text-white">TribalVerse</h1>
+            </div>
+            <input id="searchInput" type="text" placeholder="Search products & brands..." class="px-4 py-2 rounded-lg text-black w-1/2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <div class="flex items-center space-x-4">
+              <div id="authButtons" class="flex space-x-2">
+                <button id="signInBtn" class="bg-white text-green-700 px-4 py-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">Sign In</button>
+                <button id="signUpBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-500 transition-colors">Sign Up</button>
+              </div>
+              <button id="myAccountBtn" class="hidden bg-white text-green-700 px-4 py-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">My Account</button>
+              <button id="cartBtn" class="relative bg-white text-green-700 px-4 py-2 rounded-lg shadow">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCount" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+              </button>
+            </div>
+          </div>
+          <!-- Categories with Icons -->
+          <nav class="bg-white shadow-md rounded-lg">
+            <div class="container mx-auto flex justify-around items-center px-4 py-3">
+              <button class="category-btn active" data-category="all">
+                <i class="fas fa-home"></i> All
+              </button>
+              <button class="category-btn" data-category="Pottery">
+                <i class="fas fa-mug-hot"></i> Pottery
+              </button>
+              <button class="category-btn" data-category="Showpiece">
+                <i class="fas fa-gem"></i> Showpiece
+              </button>
+              <button class="category-btn" data-category="handbags">
+                <i class="fas fa-shopping-bag"></i> Handbags
+              </button>
+              <button class="category-btn" data-category="art">
+                <i class="fas fa-palette"></i> Art
+              </button>
+              <button class="category-btn" data-category="metal work">
+                <i class="fas fa-wrench"></i> Metal Work
+              </button>
+              <button class="category-btn" data-category="Jewellery">
+                <i class="fas fa-ring"></i> Jewellery
+              </button>
+              <button class="category-btn" data-category="Hair accessories">
+                <i class="fas fa-braid"></i> Hair Accessories
+              </button>
+            </div>
+          </nav>
         </div>
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search products..."
-          class="px-4 py-2 rounded-lg text-black w-64"
-        />
-        <button
-          id="cartBtn"
-          class="relative bg-white text-green-700 px-4 py-2 rounded-lg shadow"
-        >
-          <i class="fas fa-shopping-cart"></i>
-          <span
-            id="cartCount"
-            class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-            >0</span
-          >
-        </button>
-      </div>
-    </header>
+      </header>
 
-    <!-- Categories -->
-    <nav class="bg-white shadow-md">
-      <div class="container mx-auto flex space-x-4 px-4 py-3">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="Pottery">Pottery</button>
-        <button class="category-btn" data-category="Showpiece">Showpiece</button>
-        <button class="category-btn" data-category="handbags">Handbags</button>
-        <button class="category-btn" data-category="art">Art</button>
-        <button class="category-btn" data-category="metal work">Metal Work</button>
-        <button class="category-btn" data-category="Jewellery">Jewellery</button>
-        <button class="category-btn" data-category="Hair accessories">Hair Accessories</button>
-      </div>
-    </nav>
+      <!-- 🛍️ Products Grid -->
+      <main class="container mx-auto px-4 py-6">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+      </main>
 
-    <!-- Products Grid -->
-    <main class="container mx-auto px-4 py-6">
-      <div
-        id="productsGrid"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      ></div>
-    </main>
-
-    <!-- Cart Sidebar -->
-    <aside
-      id="cartSidebar"
-      class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50"
-    >
-      <div class="flex justify-between items-center p-4 border-b">
-        <h2 class="text-xl font-bold">Your Cart</h2>
-        <button id="closeCart" class="text-gray-600 hover:text-red-500">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div id="cartItems" class="p-4 overflow-y-auto h-[70%]"></div>
-      <div class="p-4 border-t">
-        <div class="flex justify-between mb-4">
-          <span class="font-semibold">Total:</span>
-          <span id="cartTotal" class="font-bold">₹0.00</span>
+      <!-- About Us Section -->
+      <section id="about-us" class="container mx-auto px-4 py-12">
+        <div class="bg-white rounded-lg shadow-md p-8 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+          <div class="md:w-1/3">
+            <img class="w-full h-auto rounded-lg shadow-lg" src="https://placehold.co/400x300/E5E7EB/6B7280?text=About+Us" alt="About Us image" />
+          </div>
+          <div class="md:w-2/3">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">About TribalVerse</h2>
+            <p class="text-gray-600 mb-4">
+              TribalVerse is a passionate endeavor dedicated to preserving and promoting the rich cultural heritage of tribal art forms. We handpick unique treasures from skilled artisans, connecting you directly to the heart and soul of traditional craftsmanship. Our mission is to empower these communities while bringing their beautiful, authentic creations to a global audience.
+            </p>
+            <p class="text-gray-600">
+              Each piece in our collection tells a story, carrying with it the traditions and history of its makers. By choosing TribalVerse, you're not just buying a product—you're supporting a legacy of art and tradition.
+            </p>
+          </div>
         </div>
-        <button
-          id="checkoutBtn"
-          class="w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg"
-        >
-          Checkout
-        </button>
-      </div>
-    </aside>
+      </section>
 
-    <!-- Product Modal -->
-    <div
-      id="productModal"
-      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
-    >
-      <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
-        <button
-          id="closeModal"
-          class="absolute top-3 right-3 text-gray-600 hover:text-red-500"
-        >
-          <i class="fas fa-times"></i>
-        </button>
+      <!-- Cart Sidebar -->
+      <aside id="cartSidebar" class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex justify-between items-center p-4 border-b">
+          <h2 class="text-xl font-bold">Your Cart</h2>
+          <button id="closeCart" class="text-gray-600 hover:text-red-500"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="p-4 overflow-y-auto h-[70%]"></div>
+        <div class="p-4 border-t">
+          <div class="flex justify-between mb-4">
+            <span class="font-semibold">Total:</span>
+            <span id="cartTotal" class="font-bold">$0.00</span>
+          </div>
+          <button id="checkoutBtn" class="w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg">Checkout</button>
+        </div>
+      </aside>
 
-        <img
-          id="modalImage"
-          src=""
-          alt="Product"
-          class="w-full h-64 object-cover rounded-lg mb-4"
-        />
-
-        <h2 id="modalTitle" class="text-2xl font-bold mb-2"></h2>
-        <p id="modalDescription" class="text-gray-600 mb-2"></p>
-        <p id="modalOrigin" class="text-sm text-gray-500 mb-4"></p>
-        <p id="modalPrice" class="text-xl font-bold text-green-600 mb-4"></p>
-
-        <div class="flex items-center space-x-4">
-          <input
-            type="number"
-            id="modalQuantity"
-            value="1"
-            min="1"
-            class="w-16 border rounded px-2 py-1 text-center"
-          />
-          <button
-            id="addToCartBtn"
-            class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg"
-          >
-            Add to Cart
-          </button>
+      <!-- Product Modal -->
+      <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
+          <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-red-500"><i class="fas fa-times"></i></button>
+          <img id="modalImage" src="" alt="Product" class="w-full h-64 object-cover rounded-lg mb-4" />
+          <h2 id="modalTitle" class="text-2xl font-bold mb-2"></h2>
+          <p id="modalDescription" class="text-gray-600 mb-2"></p>
+          <p id="modalOrigin" class="text-sm text-gray-500 mb-4"></p>
+          <p id="modalPrice" class="text-xl font-bold text-green-600 mb-4"></p>
+          <div class="flex items-center space-x-4">
+            <input type="number" id="modalQuantity" value="1" min="1" class="w-16 border rounded px-2 py-1 text-center" />
+            <button id="addToCartBtn" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg">Add to Cart</button>
+          </div>
         </div>
       </div>
     </div>
+    
+    <!-- ⬇️ Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Get to Know Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">About TribalVerse</a></li>
+                        <li><a href="#" class="hover:underline">Careers</a></li>
+                        <li><a href="#" class="hover:underline">Press Releases</a></li>
+                        <li><a href="#" class="hover:underline">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Connect With Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">Facebook</a></li>
+                        <li><a href="#" class="hover:underline">Twitter</a></li>
+                        <li><a href="#" class="hover:underline">Instagram</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Make Money with Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">Sell on TribalVerse</a></li>
+                        <li><a href="#" class="hover:underline">Become an Affiliate</a></li>
+                        <li><a href="#" class="hover:underline">Advertise Your Products</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Let Us Help You</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">Your Account</a></li>
+                        <li><a href="#" class="hover:underline">Returns Centre</a></li>
+                        <li><a href="#" class="hover:underline">Help</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2024 TribalVerse. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
 
