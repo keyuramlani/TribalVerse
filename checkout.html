@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      #messageBox {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+        min-width: 250px;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .form-radio {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        border: 2px solid #D1D5DB;
+        background-color: #F9FAFB;
+        transition: background-color 0.2s, border-color 0.2s;
+      }
+      .form-radio:checked {
+        border-color: #059669;
+        background-color: #059669;
+      }
+      .form-radio:checked::after {
+        content: '';
+        display: block;
+        width: 0.625rem;
+        height: 0.625rem;
+        background-color: #fff;
+        border-radius: 50%;
+        margin: 0.1875rem;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 p-6">
+    <!-- Message Box -->
+    <div id="messageBox" class="transition-transform duration-300 scale-0"></div>
+
+    <div class="container mx-auto max-w-4xl bg-white rounded-lg shadow-md p-8">
+      <h1 class="text-3xl font-bold text-green-700 text-center mb-6">Checkout</h1>
+      
+      <!-- Order Summary Section -->
+      <div id="orderSummarySection">
+        <div id="cartSummary" class="mb-8">
+          <h2 class="text-xl font-semibold mb-4">Your Cart Items</h2>
+          <div id="checkoutItems" class="space-y-4">
+            <!-- Cart items will be rendered here -->
+          </div>
+        </div>
+        <div class="flex justify-between items-center text-2xl font-bold border-t pt-4">
+          <span>Total:</span>
+          <span id="checkoutTotal" class="text-green-700">₹0.00</span>
+        </div>
+        <div class="mt-8 flex justify-center space-x-4">
+          <button id="showShippingFormBtn" class="bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-800 transition-colors">Place Order</button>
+          <button id="backToStoreBtn" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-400 transition-colors">Back to Store</button>
+        </div>
+      </div>
+
+      <!-- Shipping Details Form Section (Initially Hidden) -->
+      <div id="shippingFormSection" class="hidden">
+        <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+        <form id="shippingForm" class="space-y-6">
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" id="fullName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+          </div>
+          <div>
+            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+            <input type="text" id="address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+          </div>
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+            <input type="text" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+          </div>
+          <div>
+            <label for="zip" class="block text-sm font-medium text-gray-700">ZIP Code</label>
+            <input type="text" id="zip" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+          </div>
+          <div class="flex justify-center space-x-4">
+            <button type="submit" class="bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-800 transition-colors">Proceed to Payment</button>
+            <button type="button" id="backToSummaryBtn" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-400 transition-colors">Back</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Payment Gateway Section (Initially Hidden) -->
+      <div id="paymentGatewaySection" class="hidden">
+        <h2 class="text-xl font-semibold mb-4">Select Payment Method</h2>
+        <div class="mb-6">
+          <label class="inline-flex items-center">
+            <input type="radio" class="form-radio" name="paymentMethod" value="card" checked>
+            <span class="ml-2 font-medium text-gray-700">Credit/Debit Card</span>
+          </label>
+          <label class="inline-flex items-center ml-6">
+            <input type="radio" class="form-radio" name="paymentMethod" value="cod">
+            <span class="ml-2 font-medium text-gray-700">Cash on Delivery</span>
+          </label>
+        </div>
+        <form id="paymentForm" class="space-y-6">
+          <div id="cardDetails" class="space-y-6">
+            <div>
+              <label for="cardName" class="block text-sm font-medium text-gray-700">Cardholder Name</label>
+              <input type="text" id="cardName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+            </div>
+            <div>
+              <label for="cardNumber" class="block text-sm font-medium text-gray-700">Card Number</label>
+              <input type="text" id="cardNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+            </div>
+            <div class="flex space-x-4">
+              <div class="flex-1">
+                <label for="expiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+              </div>
+              <div class="flex-1">
+                <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+                <input type="text" id="cvv" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" required />
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-center space-x-4">
+            <button type="submit" id="payNowBtn" class="bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-800 transition-colors">Pay Now</button>
+            <button type="button" id="backToShippingBtn" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-400 transition-colors">Back</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+      // Supabase config
+      const SUPABASE_URL = "https://iesnempeybdjfrxdwsxu.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imllc25lbXBleWJkamZyeGR3c3h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3NDAyNzYsImV4cCI6MjA3MzMxNjI3Nn0.a22zjKUjtw3hKlfqqC7NBJ05Qqlbc3rWlf-zlRpCL3s";
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const checkoutItems = document.getElementById("checkoutItems");
+      const checkoutTotal = document.getElementById("checkoutTotal");
+      const backToStoreBtn = document.getElementById("backToStoreBtn");
+      const messageBox = document.getElementById("messageBox");
+      const orderSummarySection = document.getElementById("orderSummarySection");
+      const shippingFormSection = document.getElementById("shippingFormSection");
+      const shippingForm = document.getElementById("shippingForm");
+      const backToSummaryBtn = document.getElementById("backToSummaryBtn");
+      const paymentGatewaySection = document.getElementById("paymentGatewaySection");
+      const paymentForm = document.getElementById("paymentForm");
+      const backToShippingBtn = document.getElementById("backToShippingBtn");
+      const cardDetailsSection = document.getElementById("cardDetails");
+      const showShippingFormBtn = document.getElementById("showShippingFormBtn");
+      const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+
+
+      let USD_TO_INR = 83; // fallback default (approx)
+      let shippingDetails = {};
+
+      function showMessage(message, type = 'success') {
+          messageBox.textContent = message;
+          if (type === 'success') {
+              messageBox.className = 'bg-green-500 text-white fixed top-5 left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-lg z-50 transform scale-100 transition-transform duration-300';
+          } else {
+              messageBox.className = 'bg-red-500 text-white fixed top-5 left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-lg z-50 transform scale-100 transition-transform duration-300';
+          }
+          setTimeout(() => {
+              messageBox.classList.remove('scale-100');
+              messageBox.classList.add('scale-0');
+          }, 3000);
+      }
+
+      async function loadExchangeRate() {
+        try {
+          const res = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=INR");
+          const data = await res.json();
+          USD_TO_INR = data.rates.INR;
+        } catch (err) {
+          console.warn("Using fallback INR rate:", USD_TO_INR);
+        }
+      }
+
+      function renderCheckoutSummary() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+          checkoutItems.innerHTML = '<p class="text-center text-gray-500">Your cart is empty.</p>';
+          checkoutTotal.textContent = '₹0.00';
+          showShippingFormBtn.style.display = 'none';
+          return;
+        }
+
+        checkoutItems.innerHTML = cart.map(item => `
+          <div class="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg">
+            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md"/>
+            <div class="flex-1">
+              <p class="font-semibold">${item.name}</p>
+              <p class="text-sm text-gray-600">Quantity: ${item.quantity}</p>
+            </div>
+            <p class="font-bold text-green-700">₹${(item.price * item.quantity * USD_TO_INR).toFixed(2)}</p>
+          </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+        checkoutTotal.textContent = `₹${(total * USD_TO_INR).toFixed(2)}`;
+      }
+
+      showShippingFormBtn.addEventListener("click", () => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+          showMessage("Your cart is empty!", "error");
+          return;
+        }
+        orderSummarySection.classList.add('hidden');
+        shippingFormSection.classList.remove('hidden');
+      });
+
+      shippingForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        shippingDetails = {
+          fullName: shippingForm.fullName.value,
+          address: shippingForm.address.value,
+          city: shippingForm.city.value,
+          zip: shippingForm.zip.value
+        };
+        shippingFormSection.classList.add('hidden');
+        paymentGatewaySection.classList.remove('hidden');
+      });
+      
+      paymentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const payNowBtn = document.getElementById('payNowBtn');
+        payNowBtn.disabled = true;
+        payNowBtn.textContent = 'Processing...';
+
+        if (selectedPaymentMethod === 'cod') {
+          showMessage("Placing your COD order...", "success");
+        } else {
+          showMessage("Processing your payment...", "success");
+        }
+
+        const { error } = await supabase.from("orders").insert([
+          {
+            items: cart,
+            total: cart.reduce((s, i) => s + i.price * i.quantity, 0),
+            created_at: new Date(),
+            shipping_details: shippingDetails,
+            payment_method: selectedPaymentMethod
+          },
+        ]);
+        
+        if (error) {
+          console.error(error);
+          showMessage("Error placing order. Please try again.", "error");
+          payNowBtn.disabled = false;
+          payNowBtn.textContent = 'Pay Now';
+        } else {
+          showMessage("Order placed successfully! Thank you for your purchase.", "success");
+          localStorage.removeItem("cart");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 3000);
+        }
+      });
+
+      paymentMethods.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          if (e.target.value === 'cod') {
+            cardDetailsSection.classList.add('hidden');
+          } else {
+            cardDetailsSection.classList.remove('hidden');
+          }
+        });
+      });
+
+      backToSummaryBtn.addEventListener("click", () => {
+        shippingFormSection.classList.add('hidden');
+        orderSummarySection.classList.remove('hidden');
+      });
+
+      backToShippingBtn.addEventListener("click", () => {
+        paymentGatewaySection.classList.add('hidden');
+        shippingFormSection.classList.remove('hidden');
+      });
+
+      backToStoreBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+
+      window.onload = () => {
+        loadExchangeRate();
+        renderCheckoutSummary();
+      };
+    </script>
+  </body>
+</html>

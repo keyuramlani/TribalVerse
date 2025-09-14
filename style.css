@@ -1,0 +1,44 @@
+/* Extra custom styles */
+
+.category-btn {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.category-btn:hover, .category-btn.active {
+  background-color: hsl(32, 91%, 22%);
+  color: #fff;
+}
+
+.product-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(165, 42, 42, 1.0), 0 1px 2px 0 rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(165, 42, 42, 1.0), 0 4px 6px -2px rgba(0,0,0,0.05);
+  transform: translateY(-0.25rem);
+}
+/* 
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit:cover;
+  display: block;
+  border-radius: 0.5rem;
+} */
+.product-card img {
+  width: 200px;       /* fixed width */
+  height: 200px;      /* fixed height */
+  object-fit: cover;  /* keeps ratio, crops extra */
+  display: block;
+  margin: 0 auto;     /* centers image inside the card */
+  border-radius: 0.5rem; /* optional rounded corners */
+}
